@@ -37,18 +37,69 @@ export default function LandingFooter() {
     <footer style={{
       background: 'oklch(0.18 0.06 148)',
       borderTop: '1px solid oklch(0.28 0.08 148)',
-      padding: 'clamp(48px,6vw,80px) clamp(20px,5vw,80px) 0',
+      padding: 'clamp(40px,6vw,80px) clamp(20px,5vw,80px) 0',
+      overflowX: 'hidden',
     }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
-        {/* ── Main grid: brand | 3 link cols | donation ── */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1.2fr 1fr 1fr 1fr 1.6fr',
-          gap: 'clamp(24px,3vw,48px)',
-          paddingBottom: 56,
-          alignItems: 'start',
-        }}>
+        {/* ── Responsive CSS ── */}
+        <style>{`
+          .footer-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr 1.6fr;
+            gap: clamp(24px, 3vw, 48px);
+            padding-bottom: 56px;
+            align-items: start;
+          }
+          .footer-links-group {
+            display: grid;
+            grid-column: 2 / 5;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: clamp(16px, 3vw, 40px);
+          }
+          .footer-bottom {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+          }
+          .footer-bottom-links {
+            display: flex;
+            gap: 24px;
+          }
+
+          @media (max-width: 768px) {
+            .footer-grid {
+              grid-template-columns: 1fr;
+              gap: 36px;
+              padding-bottom: 40px;
+            }
+            .footer-links-group {
+              grid-column: 1;
+              grid-template-columns: 1fr 1fr;
+              gap: 28px 20px;
+            }
+            .footer-bottom {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 10px;
+            }
+            .footer-bottom-links {
+              flex-wrap: wrap;
+              gap: 16px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .footer-links-group {
+              grid-template-columns: 1fr;
+              gap: 24px;
+            }
+          }
+        `}</style>
+
+        <div className="footer-grid">
 
           {/* Brand */}
           <div>
@@ -58,7 +109,7 @@ export default function LandingFooter() {
                 AgriMarket
               </span>
             </Link>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, maxWidth: 200, margin: '0 0 24px' }}>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, maxWidth: 220, margin: '0 0 24px' }}>
               Connecting British farmers directly with the people who eat their food since 2024.
             </p>
             <span style={{
@@ -74,43 +125,40 @@ export default function LandingFooter() {
             </span>
           </div>
 
-          {/* Link columns */}
-          {Object.entries(LINKS).map(([heading, items]) => (
-            <div key={heading}>
-              <p style={{
-                fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
-                textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 16,
-              }}>
-                {heading}
-              </p>
-              {items.map(({ label, to }) => (
-                <Link key={label} to={to} style={linkStyle}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
-                >
-                  {label}
-                </Link>
-              ))}
-            </div>
-          ))}
+          {/* Link columns — grouped so they span correctly on desktop */}
+          <div className="footer-links-group">
+            {Object.entries(LINKS).map(([heading, items]) => (
+              <div key={heading}>
+                <p style={{
+                  fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
+                  textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 14,
+                }}>
+                  {heading}
+                </p>
+                {items.map(({ label, to }) => (
+                  <Link key={label} to={to} style={linkStyle}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}
+                  >
+                    {label}
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
 
-          {/* Donation — full width of its column */}
+          {/* Donation card */}
           <div>
             <FooterDonation />
           </div>
         </div>
 
         {/* ── Bottom bar ── */}
-        <div style={{
-          borderTop: '1px solid oklch(0.28 0.08 148)',
-          padding: '20px 0',
-          display: 'flex', flexWrap: 'wrap',
-          alignItems: 'center', justifyContent: 'space-between', gap: 12,
-        }}>
+        <div className="footer-bottom" style={{ borderTop: '1px solid oklch(0.28 0.08 148)', padding: '20px 0' }}>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', margin: 0 }}>
             © {new Date().getFullYear()} AgriMarket Ltd. All rights reserved.
           </p>
-          <div style={{ display: 'flex', gap: 24 }}>
+          <div className="footer-bottom-links">
             {['Privacy policy', 'Terms of service', 'Cookie settings'].map(item => (
               <a key={item} href="#" style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', textDecoration: 'none', transition: 'color 0.18s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
@@ -121,6 +169,7 @@ export default function LandingFooter() {
             ))}
           </div>
         </div>
+
       </div>
     </footer>
   )
